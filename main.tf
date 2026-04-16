@@ -89,7 +89,7 @@ resource "azurerm_linux_virtual_machine" "lab_vm" {
   name                            = "lab8-vm"
   resource_group_name             = azurerm_resource_group.lab_rg.name
   location                        = azurerm_resource_group.lab_rg.location
-  size                            = "Standard_D2s_v3"
+  size                            = "Standard_D4s_v3"
   admin_username                  = "azureuser"
   admin_password                  = var.admin_password
   disable_password_authentication = false
