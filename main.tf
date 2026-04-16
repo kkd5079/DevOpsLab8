@@ -91,7 +91,7 @@ resource "azurerm_linux_virtual_machine" "lab_vm" {
   location                        = azurerm_resource_group.lab_rg.location
   size                            = "Standard_D2s_v3"
   admin_username                  = "azureuser"
-  admin_password = var.admin_password
+  admin_password                  = var.admin_password
   disable_password_authentication = false
 
   network_interface_ids = [

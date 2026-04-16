@@ -1,0 +1,53 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    env:
+     TF_VAR_admin_password: ${{ secrets.ADMIN_PASSWORD }}
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Authenticate to Azure
+      - name: 'Az CLI login'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Install the latest version of Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Initialize a new or existing Terraform working directory
+      - name: Terraform Init
+        run: terraform init
+
+      # Check Terraform formatting
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      # Generate Terraform execution plan
+      - name: Terraform Plan
+        run: terraform plan -input=false
+
+      # Apply Terraform configuration (only on push to main)
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
